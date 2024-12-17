@@ -248,6 +248,9 @@ class XLoraModel(BaseTuner):
         base_lora_config.bias = "none"
         lora_model = LoraModel(model, base_lora_config, adapter_name)
 
+        if "default" in lora_model.peft_config:
+            del lora_model.peft_config["default"]
+            
         self.xlora_config = conf
         self.lora_model = lora_model
 
