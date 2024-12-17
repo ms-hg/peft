@@ -180,7 +180,7 @@ class BaseTuner(nn.Module, ABC):
 
         self.active_adapter: str | list[str] = adapter_name
         self._pre_injection_hook(self.model, self.peft_config[adapter_name], adapter_name)
-        if (isinstance(peft_config, PeftConfig) and peft_config.peft_type != PeftType.XLORA) or (isinstance(peft_config, dict) and peft_config[adapter_name].peft_type != PeftType.XLORA):
+        if peft_config.peft_type != PeftType.XLORA or peft_config[adapter_name].peft_type != PeftType.XLORA:
             self.inject_adapter(self.model, adapter_name, low_cpu_mem_usage=low_cpu_mem_usage)
 
         # Copy the peft_config in the injected model.
