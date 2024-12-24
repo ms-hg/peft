@@ -68,6 +68,9 @@ def convert_layers_to_xlora(
                 layer_number=total_swapped,
                 config=config
             )
+            all_layers.append(new_layer)
+            module.forward = new_layer.forward
+            total_swapped += 1
         elif isinstance(module, lora.Embedding):
             device = module.lora_embedding_A[next(iter(module.lora_embedding_A))].device
             new_layer = XLoraEmbeddingLayer(
