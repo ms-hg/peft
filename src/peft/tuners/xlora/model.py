@@ -60,7 +60,14 @@ def convert_layers_to_xlora(
             module.forward = new_layer.forward  # type: ignore[method-assign]
             total_swapped += 1
         elif isinstance(module, lora.Linear4bit):
-            pass
+            device = module.lora_A[next(iter(module.lora_A))].weight.device
+            new_layer = XLoraLinear4bitLayer(
+                model=xloramodel,
+                target=module,
+                target_forward=module.forward,
+                layer_number=total_swapped,
+                config=config
+            )
         elif isinstance(module, lora.Embedding):
             device = module.lora_embedding_A[next(iter(module.lora_embedding_A))].device
             new_layer = XLoraEmbeddingLayer(
