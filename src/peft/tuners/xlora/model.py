@@ -30,7 +30,7 @@ from peft.utils.save_and_load import set_peft_model_state_dict
 from .. import lora
 from .classifier import XLoraClassifier
 from .config import XLoraConfig
-from .layer import XLoraConv2dLayer, XLoraEmbeddingLayer, XLoraLinearLayer
+from .layer import XLoraConv2dLayer, XLoraEmbeddingLayer, XLoraLinearLayer, XLoraLinear4bitLayer
 
 
 def convert_layers_to_xlora(
@@ -59,6 +59,8 @@ def convert_layers_to_xlora(
             all_layers.append(new_layer)
             module.forward = new_layer.forward  # type: ignore[method-assign]
             total_swapped += 1
+        elif isinstance(module, lora.Lnear4bit):
+            pass
         elif isinstance(module, lora.Embedding):
             device = module.lora_embedding_A[next(iter(module.lora_embedding_A))].device
             new_layer = XLoraEmbeddingLayer(
